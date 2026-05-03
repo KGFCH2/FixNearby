@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">LocalFix 🛠️</h1>
+  <h1 align="center">FixNearby 🛠️</h1>
   <p align="center">
     <strong>An open-source hyperlocal service platform connecting users with nearby workers.</strong>
   </p>
@@ -14,9 +14,9 @@
 
 ## 📖 What We Are Building
 
-**LocalFix** is designed to bridge the gap between people who need everyday services (like plumbing, electrical work, carpentry, or cleaning) and the skilled professionals who provide them in their local neighborhoods. 
+**FixNearby** is designed to bridge the gap between people who need everyday services (like plumbing, electrical work, carpentry, or cleaning) and the skilled professionals who provide them in their local neighborhoods. 
 
-Unlike massive corporate directories, LocalFix aims to be a lightweight, fast, and community-driven application built entirely on the **MERN Stack** (MongoDB, Express, React, Node.js) and styled with **Tailwind CSS**.
+Unlike massive corporate directories, FixNearby aims to be a lightweight, fast, and community-driven application built entirely on the **MERN Stack** (MongoDB, Express, React, Node.js) and styled with **Tailwind CSS**.
 
 ## 🏗️ Current Project State
 

@@ -21,7 +21,7 @@ app.use('/api/auth', authRoutes);
 
 // Basic health check route
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'success', message: 'LocalFix API is running' });
+  res.status(200).json({ status: 'success', message: 'FixNearby API is running' });
 });
 
 // Start server

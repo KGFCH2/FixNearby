@@ -1,7 +1,7 @@
 {
-  "name": "localfix-server",
+  "name": "FixNearby-server",
   "version": "1.0.0",
-  "description": "LocalFix backend API",
+  "description": "FixNearby backend API",
   "main": "server.js",
   "type": "module",
   "scripts": {

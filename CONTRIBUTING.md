@@ -1,6 +1,6 @@
-# Contributing to LocalFix 🚀
+# Contributing to FixNearby 🚀
 
-First off, thank you for considering contributing to LocalFix! It's people like you that make open-source such a fantastic community to learn, inspire, and create.
+First off, thank you for considering contributing to FixNearby! It's people like you that make open-source such a fantastic community to learn, inspire, and create.
 
 This document provides guidelines and steps for contributing to this project. 
 
@@ -84,4 +84,4 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 
 ---
 
-Once again, thank you for your time and effort in improving LocalFix. Happy coding! 🎉
+Once again, thank you for your time and effort in improving FixNearby. Happy coding! 🎉

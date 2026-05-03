@@ -12,7 +12,7 @@ const Home = () => {
               <span className="block text-blue-600">In Your Neighborhood</span>
             </h1>
             <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-              LocalFix connects you with trusted electricians, plumbers, carpenters, and more. Fast, secure, and hassle-free.
+              FixNearby connects you with trusted electricians, plumbers, carpenters, and more. Fast, secure, and hassle-free.
             </p>
             <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">

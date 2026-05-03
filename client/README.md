@@ -1,6 +1,6 @@
-# LocalFix Frontend (Open Source Starter)
+# FixNearby Frontend (Open Source Starter)
 
-This is the frontend template for the LocalFix open-source project, built with React (Vite) and Tailwind CSS.
+This is the frontend template for the FixNearby open-source project, built with React (Vite) and Tailwind CSS.
 
 ## Folder Structure
 
