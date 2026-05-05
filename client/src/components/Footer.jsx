@@ -8,11 +8,11 @@ const Footer = () => {
     `transition ${
       location.pathname === path
         ? "text-blue-400 font-medium"
-        : "hover:text-blue-400"
+        : "text-gray-200 hover:text-blue-400"
     }`;
 
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-auto">
+    <footer className="bg-gray-900 text-gray-200 mt-auto">
       
       {/* Main Section */}
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -22,12 +22,11 @@ const Footer = () => {
           <h2 className="text-2xl font-bold text-white tracking-wide">
             FixNearby
           </h2>
-          <p className="mt-4 text-sm text-gray-400 leading-relaxed">
+          <p className="mt-4 text-sm text-gray-300 leading-relaxed">
             Connecting you with trusted local service providers quickly and easily.
           </p>
 
-          {/* Location hint (fits your app concept) */}
-          <div className="flex items-center gap-2 mt-3 text-sm text-gray-500">
+          <div className="flex items-center gap-2 mt-3 text-sm text-gray-400">
             <FaMapMarkerAlt />
             <span>Serving your local area</span>
           </div>
@@ -67,7 +66,7 @@ const Footer = () => {
       <div className="border-t border-gray-700" />
 
       {/* Bottom Bar */}
-      <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400">
+      <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-300">
         
         <p className="text-center sm:text-left">
           © {new Date().getFullYear()} FixNearby. All rights reserved.
@@ -75,31 +74,28 @@ const Footer = () => {
 
         <div className="flex items-center space-x-6 mt-3 sm:mt-0">
           
-          {/* GitHub */}
           <a
             href="https://github.com/your-repo"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 hover:text-blue-400 transition hover:scale-105"
+            className="flex items-center gap-1 text-gray-200 hover:text-blue-400 transition"
           >
             <FaGithub />
             GitHub
           </a>
 
-          {/* Contribute */}
           <a
             href="https://github.com/your-repo"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-blue-400 transition hover:scale-105"
+            className="text-gray-200 hover:text-blue-400 transition"
           >
             Contribute
           </a>
 
-          {/* Contact */}
           <Link
             to="/contact"
-            className="flex items-center gap-1 hover:text-blue-400 transition hover:scale-105"
+            className="flex items-center gap-1 text-gray-200 hover:text-blue-400 transition"
           >
             <FaEnvelope />
             Contact
