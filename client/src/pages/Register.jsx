@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -10,70 +11,193 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
   });
-  const [error, setError] = useState(null);
+
+  const [interacted, setInteracted] = useState({});
+  const [errors, setErrors]=useState({});
+  const [apiError,setApiError]=useState(null);
+  const [message, setMessage]=useState(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  // ---------------- VALIDATION ----------------
+
+  const validateFields = (name, value) => {
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/;
+
+    switch (name) {
+      case "name":
+        if (!value.trim()) return "Username is required";
+        break;
+
+      case "email":
+        if (!value || !emailRegex.test(value)) {
+          return "Invalid email address";
+        }
+        break;
+
+      case "password":
+        if (value.length < 6) {
+          return "Password must be at least 6 characters";
+        }
+        break;
+        
+      case "phone":
+        if (value && !/^[0-9]{10}$/.test(value.trim())) {
+          return "Enter a valid phone number";
+        }
+        break;
+
+      default:
+        return "";
+    }
+
+    return "";
   };
+
+  // ---------------- HANDLE CHANGE ----------------
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Validate while typing after interaction
+    if (interacted[name]) {
+      const errorMsg = validateFields(name, value);
+
+      setErrors((prev) => ({
+        ...prev,
+        [name]: errorMsg,
+      }));
+    }
+  };
+
+  // ---------------- HANDLE BLUR ----------------
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+
+    setInteracted((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+
+    const errorMsg = validateFields(name, value);
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: errorMsg,
+    }));
+  };
+
+  // ---------------- HANDLE SUBMIT ----------------
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
+    setMessage(null);
+    setErrors({});
+    setApiError(null);
 
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-          }),
-        }
-      );
+    const newErrors = {};
+    const allInteracted = {};
 
-      const data = await res.json();
+    Object.keys(formData).forEach((key) => {
+      const errorMsg = validateFields(key, formData[key]);
 
-      if (!res.ok) {
-        setError(data.message || "Registration failed. Please try again.");
-        return;
+      if (errorMsg) {
+        newErrors[key] = errorMsg;
       }
 
-      // Automatically log the user in after registration
-      login(data);
-      alert("Registration successful! Welcome to FixNearby.");
+      allInteracted[key] = true;
+    });
+
+    setInteracted(allInteracted);
+
+    // Stop if validation errors exist
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setApiError(null);
+    setLoading(true);
+  
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/register`,
+        {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            password: formData.password,
+          });
+    
+      const userData = res.data;
+
+      login(userData);
+      setMessage("Registration successful! Welcome to FixNearby.");
+      
+
+      setFormData({name:"", email:"",phone: "", password:""});
       navigate("/dashboard");
-    } catch {
-      setError("Network error. Please check your connection and try again.");
+    } catch(error) {
+      setApiError(error?.response?.data?.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  // ---------------- INPUT STYLE ----------------
+
+  const inputStyles = (field) =>
+    `appearance-none relative block w-full px-4 py-3 border rounded-xl 
+    focus:outline-none transition duration-200 bg-gray-50
+    ${
+      interacted[field] && errors[field]
+        ? "border-red-500 focus:ring-2 focus:ring-red-200 focus:border-red-500"
+        : "border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+    }`;
+
+  // ---------------- UI ----------------
+
   return (
-    <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8">
+        {/* Heading */}
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900">
             Create an account
           </h2>
-        </div>
 
-        {error && (
+          <p className="mt-2 text-sm text-gray-500">
+            Join FixNearby and get started
+          </p>
+        </div>
+  
+
+        {apiError && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-            {error}
+            {apiError}
+          </div>
+        )}
+         {message && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-sm">
+            {message}
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+        {/* Form */}
+         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div>
+          {/* Name */}
             <input
               id="name"
               name="name"
@@ -81,9 +205,23 @@ const Register = () => {
               required
               value={formData.name}
               onChange={handleChange}
+              onBlur={handleBlur}
               placeholder="Full Name"
-              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className={inputStyles("name")}
             />
+
+            {/* Reserved error space */}
+            <div className="min-h-[22px] mt-1 text-sm">
+              {interacted.name && errors.name && (
+                <span className="text-red-600">
+                  {errors.name}
+                </span>
+              )}
+            </div>
+          </div>
+         
+          <div>
+          {/* Email */}
             <input
               id="email-address"
               name="email"
@@ -91,8 +229,30 @@ const Register = () => {
               required
               value={formData.email}
               onChange={handleChange}
-              placeholder="Email address"
-              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              onBlur={handleBlur}
+              placeholder="Email Address"
+              className={inputStyles("email")}
+            />
+
+            <div className="min-h-[22px] mt-1 text-sm">
+              {interacted.email && errors.email && (
+                <span className="text-red-600">
+                  {errors.email}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div>
+          {/* Phone */}
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Phone Number"
+              className={inputStyles("phone")}
             />
             <div className="relative">
               <input
@@ -112,23 +272,63 @@ const Register = () => {
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
+
+            {/* Empty reserved space */}
+          <div className="min-h-[22px] mt-1 text-sm">
+              {interacted.phone && errors.phone && (
+                <span className="text-red-600">
+                  {errors.phone}
+                </span>
+              )}
             </div>
           </div>
 
+          {/* Password */}
+          <div>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="Password"
+              className={inputStyles("password")}
+            />
+
+            <div className="min-h-[22px] mt-1 text-sm">
+              {interacted.password && errors.password && (
+                <span className="text-red-600">
+                  {errors.password}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
+            className="w-full mt-4 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {loading ? "Registering..." : "Register"}
+            {loading
+              ? "Creating your account..."
+              : "Create account"}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600">
+        {/* Footer */}
+        <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline font-medium">
+          <Link
+            to="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Sign in
           </Link>
+
+          
         </p>
       </div>
     </div>
