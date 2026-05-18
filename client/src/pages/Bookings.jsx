@@ -95,26 +95,39 @@ const Bookings = () => {
     );
   };
 
-  const handleReviewSubmit = (id) => {
-    if (!rating) {
-      window.alert("Please select a rating before submitting.");
-      return;
-    }
-    setBookings((current) =>
-      current.map((booking) =>
-        booking.id === id
-          ? { ...booking, review: { rating, comment } }
-          : booking
-      )
-    );
-    setActiveReview(null);
-    setRating(0);
-    setComment("");
-  };
 
-  const totalBookings = bookings.length;
-  const completedBookings = bookings.filter((b) => b.status === "Completed").length;
-  const pendingBookings = bookings.filter((b) => b.status === "Pending").length;
+ const handleReviewSubmit = (id) => {
+  if (!rating) {
+    window.alert("Please select a rating before submitting.");
+    return;
+  }
+
+  setBookings((current) =>
+    current.map((booking) =>
+      booking.id === id
+        ? {
+            ...booking,
+            review: {
+              rating,
+              comment,
+            },
+          }
+        : booking
+    )
+  );
+
+  setActiveReview(null);
+  setRating(0);
+  setComment("");
+};
+
+const totalBookings = bookings.length;
+const completedBookings = bookings.filter(
+  (b) => b.status === "Completed"
+).length;
+const pendingBookings = bookings.filter(
+  (b) => b.status === "Pending"
+).length;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">

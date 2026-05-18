@@ -1,10 +1,12 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
-export default function LanguageToggle() {
+const LanguageToggle = () => {
   const { i18n } = useTranslation();
 
   const toggle = () => {
-    i18n.changeLanguage(i18n.language.startsWith('hi') ? 'en' : 'hi');
+    i18n.changeLanguage(
+      i18n.language.startsWith("hi") ? "en" : "hi"
+    );
   };
 
   return (
@@ -13,7 +15,11 @@ export default function LanguageToggle() {
       aria-label="Switch language"
       className="px-3 py-1 text-sm font-semibold rounded-lg border border-slate-300 hover:bg-slate-100 transition"
     >
-      {i18n.language.startsWith('hi') ? 'English' : 'हिंदी'}
+      {i18n.language.startsWith("hi")
+        ? "English"
+        : "हिंदी"}
     </button>
   );
-}
+};
+
+export default LanguageToggle;

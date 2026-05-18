@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
 import { useLocation } from "../context/LocationContext";
 import { formatDistance, getDistanceKm } from "../utils/distance";
 
@@ -215,6 +215,7 @@ const ALL_WORKERS = [
   },
 ];
 
+
 const workerIconMap = {
   Electrician: IconBolt,
   Plumber: IconPipe,
@@ -257,6 +258,7 @@ const Home = () => {
 
   return (
     <div className="bg-white">
+      
       {/* HERO SECTION */}
       <section className="relative overflow-hidden bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
