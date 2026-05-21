@@ -254,10 +254,49 @@ const WorkerProfile = () => {
   const [bookingDetails, setBookingDetails] = useState({});
   const [showQuickBookPrompt, setShowQuickBookPrompt] = useState(false);
 
-  /* ✅ Safe worker lookup */
-  const worker = useMemo(() => {
-    const workerId = Number(id);
-    return WORKERS[workerId] || null;
+  useEffect(() => {
+    const loadWorker = async () => {
+      setLoading(true);
+      const workerId = Number(id);
+      if (!isNaN(workerId) && WORKERS[workerId]) {
+        setWorker(WORKERS[workerId]);
+        setLoading(false);
+      } else {
+        // Fetch from backend
+        try {
+          const res = await api.get(`/workers/${id}`);
+          const backendWorker = res.data;
+          
+          setWorker({
+            id: backendWorker._id || backendWorker.id,
+            name: backendWorker.name,
+            profession: backendWorker.category || backendWorker.profession,
+            price: backendWorker.price ? (backendWorker.price.toString().startsWith('$') ? backendWorker.price : `$${backendWorker.price}/hr`) : "$30/hr",
+            rating: backendWorker.rating || 4.5,
+            experience: backendWorker.experience ? (backendWorker.experience.toString().toLowerCase().includes("year") ? backendWorker.experience : `${backendWorker.experience} Years`) : "3 Years",
+            location: backendWorker.location || "Local Area",
+            completedJobs: backendWorker.completedJobs || 12,
+            bio: backendWorker.bio || `Licensed professional ${backendWorker.category?.toLowerCase() || 'service'} specialist ready to help.`,
+            portfolio: backendWorker.portfolio || [
+              {
+                id: 1,
+                image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop",
+                description: `Completed general ${backendWorker.category || 'service'} maintenance`,
+                completionDate: "Recent",
+                customerRating: 4.8,
+                review: "Great job, very detail-oriented and responsive.",
+              }
+            ],
+          });
+        } catch (err) {
+          console.error("Failed to load worker from backend", err);
+          setWorker(null);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    loadWorker();
   }, [id]);
 
   /* Detect whether this profession has an estimator config */
@@ -344,8 +383,16 @@ const WorkerProfile = () => {
 
   const closeModal = () => {
     setShowModal(false);
-    navigate("/bookings");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
+        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-gray-500 mt-4">Loading profile...</p>
+      </div>
+    );
+  }
 
   /* ❗ Invalid Worker */
   if (!worker) {
